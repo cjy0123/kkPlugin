@@ -1,5 +1,7 @@
+import okio.ByteString.Companion.encode
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import java.nio.charset.StandardCharsets
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -17,11 +19,12 @@ group = properties("pluginGroup").get()
 version = properties("pluginVersion").get()
 
 // Configure project's dependencies
+
 repositories {
     mavenCentral()
 }
 
-// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
+// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/plassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss`tforms.html#sub:version-catalog
 dependencies {
 //    implementation(libs.annotations)
 }
@@ -66,18 +69,19 @@ tasks {
         sinceBuild = properties("pluginSinceBuild")
         untilBuild = properties("pluginUntilBuild")
 
-        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+        // extract the <!-- plugin description --> section from readme.md and provide for the plugin's manifest
+        pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asBytes.map { bytes ->
             val start = "<!-- Plugin description -->"
             val end = "<!-- Plugin description end -->"
 
-            with (it.lines()) {
+            val text = String(bytes, Charsets.UTF_8) // 使用指定的字符集解码字节数组为字符串
+            with(text.lines()) {
                 if (!containsAll(listOf(start, end))) {
                     throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
                 }
                 subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
             }
-        }
+        }.get()
 
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
@@ -114,6 +118,24 @@ tasks {
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+        channels = properties("pluginVersion").map {
+            listOf(
+                it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" })
+        }
     }
 }
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<Test> {
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(17)) // 根据你项目的Java版本调整
+    })
+}
+
+tasks.withType<GroovyCompile> {
+    options.encoding = "UTF-8"
+}
+

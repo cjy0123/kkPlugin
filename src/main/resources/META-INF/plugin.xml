@@ -6,13 +6,76 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <resource-bundle>i18n.BatchBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.cjy0123.kkplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <fileType name="Batch" implementationClass="com.kk.plugin.batch.fileTypes.BatchFileType"
+                  fieldName="BATCH_FILE_TYPE" language="Batch" extensions="bat;cmd;exe"/>
+
+        <!--Syntax highlighting-->
+        <syntaxHighlighter key="Batch"
+                           implementationClass="com.kk.plugin.batch.fileTypes.BatchSyntaxHighlighter"/>
+        <colorSettingsPage
+                implementation="com.kk.plugin.batch.editor.colors.BatchColorPage"/>
+
+        <!--Language extensions -->
+        <multiLangCommenter implementation="com.kk.plugin.batch.editor.MultiLangCommentProvider"/>
+        <lang.commenter language="Batch"
+                        implementationClass="com.kk.plugin.batch.editor.MultiLangCommentProvider"/>
+
+        <!-- Run configuration-->
+        <configurationType implementation="com.kk.plugin.batch.runner.BatchConfigurationType"/>
+        <programRunner implementation="com.kk.plugin.batch.runner.BatchRunner"/>
+        <!--<configurationProducer implementation="com.kk.plugin.batch.runner.BatchRunConfigurationProducer"/>-->
+        <runConfigurationProducer implementation="com.kk.plugin.batch.runner.BatchRunConfigurationProducer"/>
+        <!--settings-->
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.kk.plugin.batch.settings.AppSettingsConfigurable"
+                id="com.kk.plugin.batch.settings.AppSettingsConfigurable"
+                displayName="Settings for Batch Plugin"/>
+        <applicationService serviceImplementation="com.kk.plugin.batch.settings.AppSettingsState"/>
+
     </extensions>
 
+    <actions>
+        <group id="GoLandPlugin.TopMenu" text="_GoLandPlugin" description="GoLandPlugin">
+            <action id="Proto2Go" class="com.kk.plugin.proto.Proto2Go" text="生成Proto->GO文件"
+                    description="生成Proto->GO文件" icon="AllIcons.Actions.Compile">
+                <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            </action>
+            <action id="DbProto2Go" class="com.kk.plugin.proto.ProtoDb2Go" text="生成DBProto->GO文件"
+                    description="生成DBProto->GO文件" icon="AllIcons.Providers.MongoDB">
+                <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            </action>
+            <action id="Proto2Client" class="com.kk.plugin.proto.Proto2Client" text="生成模拟客户端文件"
+                    description="生成模拟客户端文件" icon="AllIcons.Actions.ChangeView">
+                <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            </action>
+        </group>
+        <group id="com.kk.plugin.group.CustomDefaultActionGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
+               text="游戏工具" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <reference ref="Proto2Go"/>
+            <reference ref="DbProto2Go"/>
+            <reference ref="Proto2Client"/>
+            <separator/>
+        </group>
+        <group id="com.py.cyd.plugin.group.NavBarGameGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
+               text="游戏工具快捷入口">
+            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+            <add-to-group group-id="MainToolBar" anchor="first"/>
+            <reference ref="Proto2Go"/>
+            <reference ref="DbProto2Go"/>
+            <reference ref="Proto2Client"/>
+            <separator/>
+        </group>
+    </actions>
+
     <applicationListeners>
-        <listener class="com.github.cjy0123.kkplugin.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+
     </applicationListeners>
 </idea-plugin>
