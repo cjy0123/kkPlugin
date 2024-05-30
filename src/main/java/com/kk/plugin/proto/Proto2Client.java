@@ -91,16 +91,12 @@ public class Proto2Client extends ProtoActionManager {
             if (psiElement instanceof PsiDirectory psiDirectory) {
                 String name = psiDirectory.getName();
                 if (name.equals(folderName)) {
-                    boolean hasFile = false;
                     for (PsiFile file : psiDirectory.getFiles()) {
                         if (file.getName().equals(pb2goBatName)) {
-                            hasFile = true;
+                            eventCase = ProtoConst.EVENT_CASE_FOLDER;
+                            baseDir = psiDirectory;
                             break;
                         }
-                    }
-                    if (hasFile) {
-                        eventCase = ProtoConst.EVENT_CASE_FOLDER;
-                        baseDir = psiDirectory;
                     }
                 }
             } else if (psiElement instanceof PsiFile psiFile && ((PsiFile) psiElement).getName().equals(pb2goBatName)) {

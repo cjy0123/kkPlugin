@@ -103,6 +103,7 @@ public class ToolUtil {
 
                 @Override
                 public void processTerminated(@NotNull ProcessEvent event) {
+                    GoPluginUtil.syncPsiFile(project);//刷新文件缓存
                     GoPluginUtil.printlnConsole(project, consoleView,
                             ConsoleViewContentType.SYSTEM_OUTPUT,
                             "进程已终止，退出码：" + event.getExitCode());

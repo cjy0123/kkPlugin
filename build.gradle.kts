@@ -27,6 +27,7 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/plassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss`tforms.html#sub:version-catalog
 dependencies {
 //    implementation(libs.annotations)
+    implementation("com.google.code.gson:gson:2.8.8")
 }
 
 // Set the JVM language level used to build the project.

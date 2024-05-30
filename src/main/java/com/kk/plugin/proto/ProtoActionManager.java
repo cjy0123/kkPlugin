@@ -22,13 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.kk.plugin.proto.ProtoConst.EVENT_CASE_DEFAULT;
+
 public class ProtoActionManager extends AnAction {
     public static final String KEY_EVENT_CASE = "eventCase";
     public static final String KEY_PROTO_FILES = "psiFiles";
     public static final String KEY_BASE_DIR = "baseDir";
 
 
-    public GeneralCommandLine generateCommandLine(Map<String, Object> parseInfoMap, String pb2goBatName, Project project, TextConsoleView consoleView) {
+    public static GeneralCommandLine generateCommandLine(Map<String, Object> parseInfoMap, String pb2goBatName, Project project, TextConsoleView consoleView) {
         // 创建 GeneralCommandLine 实例
         GeneralCommandLine commandLine = new GeneralCommandLine();
 
@@ -38,7 +40,7 @@ public class ProtoActionManager extends AnAction {
 
         commandLine.addParameter(pb2goBatName);
 
-        int eventCase = (int) parseInfoMap.get(KEY_EVENT_CASE);
+        int eventCase = (int) parseInfoMap.getOrDefault(KEY_EVENT_CASE, EVENT_CASE_DEFAULT);
         PsiDirectory baseDir = (PsiDirectory) parseInfoMap.get(KEY_BASE_DIR);
 
         String pb2goPath = baseDir.getVirtualFile().getPath() + "/" + pb2goBatName;
@@ -77,7 +79,7 @@ public class ProtoActionManager extends AnAction {
         int eventCase = (int) parseInfoMap.get(KEY_EVENT_CASE);
         List<String> fileNames = (List<String>) parseInfoMap.get(KEY_PROTO_FILES);
         PsiDirectory baseDir = (PsiDirectory) parseInfoMap.get(KEY_BASE_DIR);
-        if (eventCase == ProtoConst.EVENT_CASE_DEFAULT) {
+        if (eventCase == EVENT_CASE_DEFAULT) {
             GoPluginUtil.printlnConsoleAndShowMessage(project, consoleView,
                     ConsoleViewContentType.LOG_ERROR_OUTPUT,
                     "生成proto失败", "未找到proto 相关目录!");
@@ -129,7 +131,7 @@ public class ProtoActionManager extends AnAction {
 
         //在Action显示之前,根据选中文件扩展名判定是否显示此Action
         PsiElement psiElement = PlatformDataKeys.PSI_ELEMENT.getData(e.getDataContext());
-        int eventCase = ProtoConst.EVENT_CASE_DEFAULT;
+        int eventCase = EVENT_CASE_DEFAULT;
         List<String> protoFiles = new ArrayList<>();
         PsiDirectory baseDir = null;
 
@@ -183,7 +185,7 @@ public class ProtoActionManager extends AnAction {
             }
         }
         // 支持右键选择文件
-        if (eventCase == ProtoConst.EVENT_CASE_DEFAULT) {
+        if (eventCase == EVENT_CASE_DEFAULT) {
             PsiFile psiFile = PlatformDataKeys.PSI_FILE.getData(e.getDataContext());
             if (psiFile != null && psiFile.getParent() != null && psiFile.getName().endsWith(ProtoConst.PROTO_FILE_NAME_SUFFIX)) {
                 if (psiFile.getParent().getName().equals(folderName)) {
@@ -208,7 +210,7 @@ public class ProtoActionManager extends AnAction {
      * 支持toolbar选择
      */
     public Map<String, Object> parseToolActionInfo(Project project, String folderName) {
-        int eventCase = ProtoConst.EVENT_CASE_DEFAULT;
+        int eventCase = EVENT_CASE_DEFAULT;
         List<String> protoFiles = new ArrayList<>();
         PsiDirectory baseDir = null;
 
@@ -229,7 +231,6 @@ public class ProtoActionManager extends AnAction {
                 }
             }
         }
-
 
 
         Map<String, Object> resultMap = new HashMap<>();

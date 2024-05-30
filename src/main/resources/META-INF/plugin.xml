@@ -68,11 +68,16 @@
                text="游戏工具快捷入口">
             <add-to-group group-id="NavBarToolBar" anchor="first"/>
             <add-to-group group-id="MainToolBar" anchor="first"/>
+            <add-to-group group-id="MainToolbarCenter" anchor="first"/>
             <reference ref="Proto2Go"/>
             <reference ref="DbProto2Go"/>
             <reference ref="Proto2Client"/>
             <separator/>
         </group>
+        <action id="showDialogAction" class="com.kk.plugin.initProject.showDialogAction" text="showDialogAction"
+                description="showDialogAction">
+            <add-to-group group-id="MainToolbarCenter" anchor="last"/>
+        </action>
     </actions>
 
     <applicationListeners>
