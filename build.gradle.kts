@@ -1,7 +1,5 @@
-import okio.ByteString.Companion.encode
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import java.nio.charset.StandardCharsets
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -24,10 +22,12 @@ repositories {
     mavenCentral()
 }
 
-// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/plassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss`tforms.html#sub:version-catalog
+// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
 //    implementation(libs.annotations)
-    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.code.gson:gson:2.8.9")
+//    implementation("org.jetbrains.plugins.go")
+
 }
 
 // Set the JVM language level used to build the project.

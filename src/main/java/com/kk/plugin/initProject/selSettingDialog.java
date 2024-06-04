@@ -22,7 +22,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Map;
 
 import static com.kk.plugin.proto.ProtoActionManager.generateCommandLine;
@@ -104,13 +106,39 @@ public class selSettingDialog extends DialogWrapper {
     }
 
     private String getIPAddress() {
+//        try {
+//            InetAddress localHost = InetAddress.getLocalHost();
+//            return localHost.getHostAddress();
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//            return "Unknown";
+//        }
+        StringBuilder ipString = new StringBuilder();
         try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            return localHost.getHostAddress();
-        } catch (UnknownHostException e) {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = networkInterfaces.nextElement();
+                // 过滤掉回环接口和未启用的接口
+                if (!networkInterface.isUp() || networkInterface.isLoopback() || networkInterface.isVirtual())
+                    continue;
+
+                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                while (inetAddresses.hasMoreElements()) {
+                    InetAddress inetAddress = inetAddresses.nextElement();
+                    // 只考虑IPv4地址
+                    if (!inetAddress.isSiteLocalAddress() || inetAddress.getHostAddress().indexOf(':') > -1)
+                        continue;
+
+                    ipString.append(inetAddress.getHostAddress());
+                    ipString.append(",");
+//                    System.out.println("Main network interface IP: " + inetAddress.getHostAddress());
+//                    break; // 找到第一个IPv4地址后就退出
+                }
+            }
+        } catch (SocketException e) {
             e.printStackTrace();
-            return "Unknown";
         }
+        return ipString.toString();
     }
 
     private void compareJsonKeys(String tempContent, String jsonContent) {
