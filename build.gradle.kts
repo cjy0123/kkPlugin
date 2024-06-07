@@ -26,8 +26,6 @@ repositories {
 dependencies {
 //    implementation(libs.annotations)
     implementation("com.google.code.gson:gson:2.8.9")
-//    implementation("org.jetbrains.plugins.go")
-
 }
 
 // Set the JVM language level used to build the project.

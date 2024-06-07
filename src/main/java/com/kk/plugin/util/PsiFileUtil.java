@@ -4,13 +4,15 @@ import com.goide.cgo.CgoFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.util.Computable;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 /**
@@ -74,6 +76,45 @@ public class PsiFileUtil {
             return null;
         }
         return ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () -> baseDir.findFile(file));
+    }
+
+    public static VirtualFile findFile(@NotNull VirtualFile directory, @NotNull String file) {
+        for (VirtualFile childFile : directory.getChildren()) {
+            if (childFile.isDirectory()) {
+                findFile(childFile, file);
+            } else if (childFile.getName().equals(file)) {
+                return childFile;
+            }
+        }
+        return null;
+    }
+
+    public static String readGoFileContent(PsiFile psiFile) throws IOException {
+        VirtualFile virtualFile = psiFile.getVirtualFile();
+        return readGoFileContent(virtualFile);
+    }
+
+    public static String readGoFileContent(VirtualFile virtualFile) throws IOException {
+        byte[] fileBytes = virtualFile.contentsToByteArray();
+        return new String(fileBytes, StandardCharsets.UTF_8);
+    }
+
+    public static void write(PsiFile psiFile, String content) {
+        if (psiFile != null) {
+            PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(psiFile.getProject());
+            psiDocumentManager.commitAllDocuments();
+            psiFile.getViewProvider().getDocument().setText(content);
+            psiDocumentManager.commitAllDocuments();
+        }
+    }
+
+    public static void write(VirtualFile file, String content) {
+        try {
+            file.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
+            file.refresh(false, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

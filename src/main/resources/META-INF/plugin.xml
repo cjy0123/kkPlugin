@@ -5,10 +5,13 @@
     <vendor>cjy0123</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.go</depends>
 
     <resource-bundle>i18n.BatchBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="com.kk.plugin.PluginStartupActivity"/>
+
         <fileType name="Batch" implementationClass="com.kk.plugin.batch.fileTypes.BatchFileType"
                   fieldName="BATCH_FILE_TYPE" language="Batch" extensions="bat;cmd;exe"/>
 
@@ -34,8 +37,8 @@
                 instance="com.kk.plugin.batch.settings.AppSettingsConfigurable"
                 id="com.kk.plugin.batch.settings.AppSettingsConfigurable"
                 displayName="Settings for Batch Plugin"/>
-        <applicationService serviceImplementation="com.kk.plugin.batch.settings.AppSettingsState"/>
 
+        <applicationService serviceImplementation="com.kk.plugin.batch.settings.AppSettingsState"/>
     </extensions>
 
     <actions>
@@ -55,6 +58,10 @@
                 <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
                 <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             </action>
+            <action id="showDialogAction" class="com.kk.plugin.initProject.showDialogAction" text="生成项目配置"
+                    description="生成项目配置" icon="AllIcons.FileTypes.Text">
+                <add-to-group group-id="MainToolbarCenter" anchor="last"/>
+            </action>
         </group>
         <group id="com.kk.plugin.group.CustomDefaultActionGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
                text="游戏工具" popup="true">
@@ -63,6 +70,7 @@
             <reference ref="DbProto2Go"/>
             <reference ref="Proto2Client"/>
             <separator/>
+            <reference ref="showDialogAction"/>
         </group>
         <group id="com.py.cyd.plugin.group.NavBarGameGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
                text="游戏工具快捷入口">
@@ -73,10 +81,11 @@
             <reference ref="DbProto2Go"/>
             <reference ref="Proto2Client"/>
             <separator/>
+            <reference ref="showDialogAction"/>
         </group>
-        <action id="showDialogAction" class="com.kk.plugin.initProject.showDialogAction" text="showDialogAction"
-                description="showDialogAction">
-            <add-to-group group-id="MainToolbarCenter" anchor="last"/>
+
+        <action id="itemWay" class="com.kk.plugin.itemWay.itemWay" text="itemWay" description="itemWay">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
     </actions>
 
