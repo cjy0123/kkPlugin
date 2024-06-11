@@ -42,7 +42,6 @@ public class itemWay extends AnAction {
         }
 
         // 读取常量
-        List<String> sortList = new ArrayList<>();
         Map<String, String> constants = extractConstantsWithComments(goFile);
         if (constants == null) {
             return;
@@ -85,6 +84,7 @@ public class itemWay extends AnAction {
 
     public static Map<String, String> extractConstantsWithComments(GoFile goFile) {
         Map<String, String> constants = new HashMap<>();
+        sortList = new ArrayList<>();
         for (GoConstDeclaration goConstDeclaration : PsiTreeUtil.findChildrenOfType(goFile, GoConstDeclaration.class)) {
             for (GoConstSpec goConstSpec : goConstDeclaration.getConstSpecList()) {
                 String constName = goConstSpec.getConstDefinitionList().get(0).getText();
