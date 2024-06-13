@@ -60,7 +60,7 @@
             </action>
             <action id="showDialogAction" class="com.kk.plugin.initProject.showDialogAction" text="生成项目配置"
                     description="生成项目配置" icon="AllIcons.FileTypes.Text">
-                <add-to-group group-id="MainToolbarCenter" anchor="last"/>
+<!--                <add-to-group group-id="MainToolbarCenter" anchor="last"/>-->
             </action>
         </group>
         <group id="com.group.CustomDefaultActionGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
