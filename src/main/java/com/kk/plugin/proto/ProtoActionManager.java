@@ -8,6 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -28,6 +29,7 @@ public class ProtoActionManager extends AnAction {
     public static final String KEY_EVENT_CASE = "eventCase";
     public static final String KEY_PROTO_FILES = "psiFiles";
     public static final String KEY_BASE_DIR = "baseDir";
+    public static final String KEY_PARAMS = "extParams";
 
 
     public static GeneralCommandLine generateCommandLine(Map<String, Object> parseInfoMap, String pb2goBatName, Project project, TextConsoleView consoleView) {
@@ -46,7 +48,7 @@ public class ProtoActionManager extends AnAction {
         String pb2goPath = baseDir.getVirtualFile().getPath() + "/" + pb2goBatName;
         File pb2goFile = new File(pb2goPath);
         if (!pb2goFile.exists()) {
-            GoPluginUtil.printlnConsole(project, consoleView, ConsoleViewContentType.LOG_ERROR_OUTPUT, "文件不存在: ", pb2goPath);
+            Messages.showMessageDialog("执行文件不存在："+pb2goPath,"出错啦",null);
             return null;
         }
 
@@ -61,8 +63,10 @@ public class ProtoActionManager extends AnAction {
                 }
             }
         }
-//        commandLine.addParameter("arg1");
-//        commandLine.addParameter("arg2");
+
+        if (parseInfoMap.containsKey(KEY_PARAMS)) {
+            commandLine.addParameter((String) parseInfoMap.get(KEY_PARAMS));
+        }
         // 可以继续添加其他参数
 
         // 设置工作目录

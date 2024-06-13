@@ -63,7 +63,7 @@
                 <add-to-group group-id="MainToolbarCenter" anchor="last"/>
             </action>
         </group>
-        <group id="com.kk.plugin.group.CustomDefaultActionGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
+        <group id="com.group.CustomDefaultActionGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
                text="游戏工具" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
             <reference ref="Proto2Go"/>
@@ -72,7 +72,7 @@
             <separator/>
             <reference ref="showDialogAction"/>
         </group>
-        <group id="com.py.cyd.plugin.group.NavBarGameGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
+        <group id="com.group.NavBarGameGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
                text="游戏工具快捷入口">
             <add-to-group group-id="NavBarToolBar" anchor="first"/>
             <add-to-group group-id="MainToolBar" anchor="first"/>
@@ -87,6 +87,12 @@
         <action id="itemWay" class="com.kk.plugin.itemWay.itemWay" text="itemWay" description="itemWay">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
+
+        <group id="DynamicActionsGroup" class="com.kk.plugin.group.DynamicActionsGroup" text="Dynamic Actions"
+                popup="true">
+            <add-to-group group-id="MainToolbarCenter" anchor="first"/>
+            <!-- This is where the dynamic actions will be added -->
+        </group>
     </actions>
 
     <applicationListeners>

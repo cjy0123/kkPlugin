@@ -1,5 +1,5 @@
 <plugins>
-    <plugin id="com.github.cjy0123.kkplugin" url="http://192.168.10.11:8012/pub/kkPlugin-0.0.3.zip" version="0.0.3">
+    <plugin id="com.github.cjy0123.kkplugin" url="http://192.168.10.11:8012/pub/kkPlugin-0.0.4.zip" version="0.0.4">
         <name>kkPlugin</name>
         <description>goland 插件</description>
         <change-notes>
