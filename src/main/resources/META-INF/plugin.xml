@@ -10,7 +10,9 @@
     <resource-bundle>i18n.BatchBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="com.kk.plugin.PluginStartupActivity"/>
+<!--        <projectService serviceImplementation="com.kk.plugin.PluginStartupActivity"/>-->
+<!--        <projectService serviceImplementation="com.kk.plugin.settings.MyPluginSettings"/>-->
+<!--        <projectConfigurable instance="com.kk.plugin.settings.MyPluginConfigurable" displayName="kk Plugin Settings"/>-->
 
         <fileType name="Batch" implementationClass="com.kk.plugin.batch.fileTypes.BatchFileType"
                   fieldName="BATCH_FILE_TYPE" language="Batch" extensions="bat;cmd;exe"/>
@@ -60,8 +62,9 @@
             </action>
             <action id="showDialogAction" class="com.kk.plugin.initProject.showDialogAction" text="生成项目配置"
                     description="生成项目配置" icon="AllIcons.FileTypes.Text">
-<!--                <add-to-group group-id="MainToolbarCenter" anchor="last"/>-->
             </action>
+<!--            <action id="findConfigAction" class="com.kk.plugin.findConfig.findConfigAction" text="找表工具"-->
+<!--                    description="找表工具" icon="AllIcons.Actions.AddFile"/>-->
         </group>
         <group id="com.group.CustomDefaultActionGroup" class="com.kk.plugin.group.CustomDefaultActionGroup"
                text="游戏工具" popup="true">
@@ -82,6 +85,7 @@
             <reference ref="Proto2Client"/>
             <separator/>
             <reference ref="showDialogAction"/>
+<!--            <reference ref="findConfigAction"/>-->
         </group>
 
         <action id="itemWay" class="com.kk.plugin.itemWay.itemWay" text="itemWay" description="itemWay">
