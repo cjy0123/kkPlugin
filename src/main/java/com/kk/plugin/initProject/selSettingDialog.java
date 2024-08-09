@@ -33,6 +33,7 @@ public class selSettingDialog extends DialogWrapper {
     private JPanel contentPane;
     private JTextPane textArea;
     private JLabel ipLabel;
+    private JTextField ipField;
     private final Map<String, Object> parseInfoMap;
 
 
@@ -50,7 +51,7 @@ public class selSettingDialog extends DialogWrapper {
 
         setOKButtonText("应用");
         setCancelButtonText("取消");
-        ipLabel.setText("本机ip：" + getIPAddress());
+        ipField.setText(getIPAddress());
 
         this.parseInfoMap = parseInfoMap;
         VirtualFile tempCfg, jsonCfg = null;
