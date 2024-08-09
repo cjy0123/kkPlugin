@@ -1,10 +1,11 @@
 <plugins>
-    <plugin id="com.github.cjy0123.kkplugin" url="http://192.168.10.11:8012/pub/kkPlugin-0.0.6.zip" version="0.0.5">
+    <plugin id="com.github.cjy0123.kkplugin" url="http://192.168.10.11:8012/pub/kkPlugin-0.0.6.zip" version="0.0.6">
         <name>kkPlugin</name>
         <description>goland 插件</description>
         <change-notes>
             proto生成工具，bat、exe运行工具。
             新增itemway下的comm.go 代码自动生成工具
+            一些优化
         </change-notes>
     </plugin>
 </plugins>

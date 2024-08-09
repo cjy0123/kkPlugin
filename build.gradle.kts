@@ -19,6 +19,9 @@ version = properties("pluginVersion").get()
 // Configure project's dependencies
 
 repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    maven { url = uri("https://mirrors.cloud.tencent.com/repository/maven") }
+    maven { url = uri("https://mirrors.huaweicloud.com/repository/maven") }
     mavenCentral()
 }
 
