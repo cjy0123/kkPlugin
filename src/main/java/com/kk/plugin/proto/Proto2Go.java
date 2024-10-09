@@ -2,11 +2,13 @@ package com.kk.plugin.proto;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.kk.plugin.util.GoPluginUtil;
 import com.kk.plugin.util.TextConsoleView;
 import com.kk.plugin.util.ToolUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -55,4 +57,5 @@ public class Proto2Go extends ProtoActionManager {
             e.getPresentation().setEnabledAndVisible(false);
         }
     }
+
 }

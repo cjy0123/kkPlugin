@@ -2,10 +2,7 @@ package com.kk.plugin.proto;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -244,5 +241,9 @@ public class ProtoActionManager extends AnAction {
         return resultMap;
     }
 
-
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT;  // 如果你的操作需要在事件分发线程上执行
+        // return ActionUpdateThread.BGT;  // 如果你的操作适合在后台执行
+    }
 }
