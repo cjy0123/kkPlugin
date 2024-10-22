@@ -3,10 +3,7 @@ package com.kk.plugin.itemWay;
 import com.goide.psi.GoConstDeclaration;
 import com.goide.psi.GoConstSpec;
 import com.goide.psi.GoFile;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -15,6 +12,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.kk.plugin.util.PsiFileUtil;
 import com.kk.plugin.util.ToolUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -158,5 +156,11 @@ public class itemWay extends AnAction {
             Messages.showMessageDialog("找不到代码标记位置，请检查comm.go文件","错误",null);
             return "";
         }
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT;  // 如果你的操作需要在事件分发线程上执行
+        // return ActionUpdateThread.BGT;  // 如果你的操作适合在后台执行
     }
 }

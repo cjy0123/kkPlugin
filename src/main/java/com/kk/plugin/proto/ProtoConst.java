@@ -11,6 +11,7 @@ public class ProtoConst {
     public static String PROTO_FOLDER_NAME = "proto";
     public static String DB_PROTO_FOLDER_NAME = "dbProto";
     public static String CLIENT_PROTO_FOLDER_NAME = "client-test";
+    public static String TOOLS_FOLDER_NAME = "tools";
 
     public static String SERVER_PROTO_FOLDER_NAME = "servers";
 

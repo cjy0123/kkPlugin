@@ -243,7 +243,7 @@ public class ProtoActionManager extends AnAction {
 
     @Override
     public @NotNull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;  // 如果你的操作需要在事件分发线程上执行
-        // return ActionUpdateThread.BGT;  // 如果你的操作适合在后台执行
+//        return ActionUpdateThread.EDT;  // 如果你的操作需要在事件分发线程上执行
+         return ActionUpdateThread.BGT;  // 如果你的操作适合在后台执行
     }
 }
