@@ -75,7 +75,7 @@ public class itemWay extends AnAction {
             return;
         }
         VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
-        if (file == null || !file.getName().equals("module_open.go")) {
+        if (file == null || !file.getName().equals("table_open_level.go")) {
             e.getPresentation().setEnabledAndVisible(false);
         }
     }
