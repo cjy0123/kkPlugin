@@ -55,11 +55,11 @@
                 <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
                 <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             </action>
-            <action id="Proto2Client" class="com.kk.plugin.proto.Proto2Client" text="生成模拟客户端文件"
-                    description="生成模拟客户端文件" icon="AllIcons.Actions.ChangeView">
-                <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            </action>
+<!--            <action id="Proto2Client" class="com.kk.plugin.proto.Proto2Client" text="生成模拟客户端文件"-->
+<!--                    description="生成模拟客户端文件" icon="AllIcons.Actions.ChangeView">-->
+<!--                <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+<!--                <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--            </action>-->
             <action id="showDialogAction" class="com.kk.plugin.initProject.showDialogAction" text="生成项目配置"
                     description="生成项目配置" icon="AllIcons.FileTypes.Text">
             </action>
@@ -71,7 +71,7 @@
             <add-to-group group-id="ToolsMenu" anchor="first"/>
             <reference ref="Proto2Go"/>
             <reference ref="DbProto2Go"/>
-            <reference ref="Proto2Client"/>
+<!--            <reference ref="Proto2Client"/>-->
             <separator/>
             <reference ref="showDialogAction"/>
         </group>
@@ -82,7 +82,7 @@
             <add-to-group group-id="MainToolbarCenter" anchor="first"/>
             <reference ref="Proto2Go"/>
             <reference ref="DbProto2Go"/>
-            <reference ref="Proto2Client"/>
+<!--            <reference ref="Proto2Client"/>-->
             <separator/>
             <reference ref="showDialogAction"/>
 <!--            <reference ref="findConfigAction"/>-->
