@@ -57,6 +57,7 @@ public class Proto2Client extends ProtoActionManager {
 
     @Override
     public void update(AnActionEvent e) {
+        super.update(e);
         Project project = e.getProject();
         if (project == null) {
             return;

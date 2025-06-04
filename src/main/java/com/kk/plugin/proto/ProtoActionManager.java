@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.kk.plugin.base.BaseAction;
 import com.kk.plugin.util.GoPluginUtil;
 import com.kk.plugin.util.TextConsoleView;
 import com.kk.plugin.util.ToolUtil;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 import static com.kk.plugin.proto.ProtoConst.EVENT_CASE_DEFAULT;
 
-public class ProtoActionManager extends AnAction {
+public class ProtoActionManager extends BaseAction {
     public static final String KEY_EVENT_CASE = "eventCase";
     public static final String KEY_PROTO_FILES = "psiFiles";
     public static final String KEY_BASE_DIR = "baseDir";
