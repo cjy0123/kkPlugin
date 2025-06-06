@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.kk.plugin.base.BaseAction;
 import com.kk.plugin.util.PsiFileUtil;
 import com.kk.plugin.util.ToolUtil;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class itemWay extends AnAction {
+public class itemWay extends BaseAction {
 
     private static List<String> sortList = new ArrayList<>();
 
@@ -67,6 +68,7 @@ public class itemWay extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
+        super.update(e);
         Project project = e.getProject();
         if (project == null) {
             return;

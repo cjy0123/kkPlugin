@@ -44,6 +44,7 @@ public class Proto2Go extends ProtoActionManager {
 
     @Override
     public void update(AnActionEvent e) {
+        super.update(e);
         Project project = e.getProject();
         if (project == null) {
             return;

@@ -1,94 +1,69 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 
-fun properties(key: String) = providers.gradleProperty(key)
-fun environment(key: String) = providers.environmentVariable(key)
+// 定义获取 Gradle 属性和环境变量的函数
+fun gradleProperty(key: String) = providers.gradleProperty(key)
+fun environmentVariable(key: String) = providers.environmentVariable(key)
 
 plugins {
-    id("java") // Java support
-    alias(libs.plugins.kotlin) // Kotlin support
-    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
-    alias(libs.plugins.changelog) // Gradle Changelog Plugin
-    alias(libs.plugins.qodana) // Gradle Qodana Plugin
-    alias(libs.plugins.kover) // Gradle Kover Plugin
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.intelliJPlatform)
+    alias(libs.plugins.changelog)
+    alias(libs.plugins.qodana)
+    alias(libs.plugins.kover)
 }
 
-group = properties("pluginGroup").get()
-version = properties("pluginVersion").get()
+// 配置项目的分组和版本
+group = gradleProperty("pluginGroup").get()
+version = gradleProperty("pluginVersion").get()
 
-// Configure project's dependencies
-
+// 配置项目的依赖
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public") }
     maven { url = uri("https://mirrors.cloud.tencent.com/repository/maven") }
     maven { url = uri("https://mirrors.huaweicloud.com/repository/maven") }
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-//    implementation(libs.annotations)
-    implementation("com.google.code.gson:gson:2.8.9")
+    testImplementation(libs.junit)
+    testImplementation(libs.opentest4j)
+
+    intellijPlatform {
+        create(gradleProperty("platformType").get(), gradleProperty("platformVersion").get())
+
+        bundledPlugins(gradleProperty("platformBundledPlugins").map { it.split(',') })
+        plugins(gradleProperty("platformPlugins").map { it.split(',') })
+    }
 }
 
-// Set the JVM language level used to build the project.
+
+// 配置 Kotlin 编译工具链
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    pluginName = properties("pluginName")
-    version = properties("platformVersion")
-    type = properties("platformType")
+// 配置 IntelliJ Platform Gradle Plugin
+intellijPlatform {
+    pluginConfiguration {
+        name = gradleProperty("pluginName").get()
+        version = gradleProperty("pluginVersion").get()
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
-}
+        description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+            val startTag = "<!-- Plugin description -->"
+            val endTag = "<!-- Plugin description end -->"
 
-// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-changelog {
-    groups.empty()
-    repositoryUrl = properties("pluginRepositoryUrl")
-}
-
-// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
-koverReport {
-    defaults {
-        xml {
-            onCheck = true
-        }
-    }
-}
-
-tasks {
-    wrapper {
-        gradleVersion = properties("gradleVersion").get()
-    }
-
-    patchPluginXml {
-        version = properties("pluginVersion")
-        sinceBuild = properties("pluginSinceBuild")
-        untilBuild = properties("pluginUntilBuild")
-
-        // extract the <!-- plugin description --> section from readme.md and provide for the plugin's manifest
-        pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asBytes.map { bytes ->
-            val start = "<!-- Plugin description -->"
-            val end = "<!-- Plugin description end -->"
-
-            val text = String(bytes, Charsets.UTF_8) // 使用指定的字符集解码字节数组为字符串
-            with(text.lines()) {
-                if (!containsAll(listOf(start, end))) {
-                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
-                }
-                subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
+            with(it.lines()) {
+                require(startTag in this && endTag in this) { "Plugin description section not found in README.md" }
+                subList(indexOf(startTag) + 1, indexOf(endTag)).joinToString("\n").let(::markdownToHTML)
             }
-        }.get()
+        }
 
-        val changelog = project.changelog // local variable for configuration cache compatibility
-        // Get the latest available change notes from the changelog file
-        changeNotes = properties("pluginVersion").map { pluginVersion ->
-            with(changelog) {
+        changeNotes = gradleProperty("pluginVersion").map { pluginVersion ->
+            with(project.changelog) {
                 renderItem(
                     (getOrNull(pluginVersion) ?: getUnreleased())
                         .withHeader(false)
@@ -97,47 +72,82 @@ tasks {
                 )
             }
         }
+
+        ideaVersion {
+            sinceBuild = gradleProperty("pluginSinceBuild").get()
+            // untilBuild = gradleProperty("pluginUntilBuild").get() // 如需配置 untilBuild，可取消注释并设置相应属性
+        }
     }
 
-    // Configure UI tests plugin
-    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    runIdeForUiTests {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
+    signing {
+        certificateChain = environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = environmentVariable("PRIVATE_KEY")
+        password = environmentVariable("PRIVATE_KEY_PASSWORD")
     }
 
-    signPlugin {
-        certificateChain = environment("CERTIFICATE_CHAIN")
-        privateKey = environment("PRIVATE_KEY")
-        password = environment("PRIVATE_KEY_PASSWORD")
+    publishing {
+        token = environmentVariable("PUBLISH_TOKEN")
+        channels = gradleProperty("pluginVersion").map { version ->
+            listOf(if (version.contains('-')) version.substringAfter('-').substringBefore('.') else "default")
+        }
     }
 
-    publishPlugin {
-        dependsOn("patchChangelog")
-        token = environment("PUBLISH_TOKEN")
-        // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
-        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = properties("pluginVersion").map {
-            listOf(
-                it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" })
+    pluginVerification {
+        ides {
+            recommended()
         }
     }
 }
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
+// 配置 Gradle Changelog Plugin
+changelog {
+    groups = emptyList() // 清空默认分组
+    repositoryUrl = gradleProperty("pluginRepositoryUrl").get()
 }
 
-tasks.withType<Test> {
-    javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(17)) // 根据你项目的Java版本调整
-    })
+// 配置 Gradle Kover Plugin
+kover {
+    reports {
+        total {
+            xml {
+                onCheck = true
+            }
+        }
+    }
 }
 
+// 配置 Gradle Wrapper
+tasks.wrapper {
+    gradleVersion = gradleProperty("gradleVersion").get()
+}
+
+// 配置发布插件任务依赖
+tasks.publishPlugin {
+    dependsOn(tasks.patchChangelog)
+}
+
+// 配置 IntelliJ Platform 测试
+intellijPlatformTesting {
+    runIde {
+        register("runIdeForUiTests") {
+            task {
+                jvmArgumentProviders += CommandLineArgumentProvider {
+                    listOf(
+                        "-Drobot-server.port=8082",
+                        "-Dide.mac.message.dialogs.as.sheets=false",
+                        "-Djb.privacy.policy.text=<!--999.999-->",
+                        "-Djb.consents.confirmation.enabled=false",
+                    )
+                }
+            }
+            plugins {
+                robotServerPlugin()
+            }
+        }
+    }
+}
+
+// 配置 Groovy 编译任务
 tasks.withType<GroovyCompile> {
     options.encoding = "UTF-8"
 }
-

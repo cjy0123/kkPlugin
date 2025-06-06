@@ -7,13 +7,14 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
+import com.kk.plugin.base.BaseAction;
 import com.kk.plugin.proto.ProtoConst;
 import com.kk.plugin.util.ToolUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class showDialogAction extends AnAction {
+public class showDialogAction extends BaseAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {

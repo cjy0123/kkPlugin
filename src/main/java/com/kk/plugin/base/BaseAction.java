@@ -1,13 +1,14 @@
-package com.kk.plugin.group;
+package com.kk.plugin.base;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.kk.plugin.settings.ProjectTypeService;
+import org.jetbrains.annotations.NotNull;
 
-public class CustomDefaultActionGroup extends DefaultActionGroup {
+public abstract class BaseAction extends AnAction {
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
         super.update(e);
         Project project = e.getProject();
         if (project != null) {
