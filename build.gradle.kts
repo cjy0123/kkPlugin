@@ -43,7 +43,7 @@ dependencies {
 
 // 配置 Kotlin 编译工具链
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
 // 配置 IntelliJ Platform Gradle Plugin
