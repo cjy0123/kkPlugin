@@ -6,6 +6,7 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.plugins.go</depends>
+    <depends>com.intellij.modules.goland</depends>
 
     <resource-bundle>i18n.BatchBundle</resource-bundle>
 
