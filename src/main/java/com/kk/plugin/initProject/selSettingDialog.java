@@ -159,17 +159,49 @@ public class selSettingDialog extends DialogWrapper {
 
                 textArea.setText("");
 
+                String[] ignoreKeys = {"project", "host", "openDate"};
+                java.util.Set<String> ignoreSet = new java.util.HashSet<>();
+                for (String k : ignoreKeys) ignoreSet.add(k);
+
+                // 先将 jsonJsonObject 拷贝一份用于最终合成
+                JsonObject mergedJson = jsonJsonObject.deepCopy();
+
                 for (Map.Entry<String, JsonElement> entry : tempJsonObject.entrySet()) {
                     String key = entry.getKey();
-                    if (!jsonJsonObject.has(key)) {
+                    if (ignoreSet.contains(key)) {
+                        // 如果 jsonJsonObject 没有该 key，也要高亮显示并添加进去
+                        if (!jsonJsonObject.has(key)) {
+                            String line = "  \"" + key + "\": " + entry.getValue() + ",\n";
+                            doc.insertString(doc.getLength(), line, diffStyle);
+                            mergedJson.add(key, entry.getValue());
+                        } else {
+                            String line = "  \"" + key + "\": " + jsonJsonObject.get(key) + ",\n";
+                            doc.insertString(doc.getLength(), line, defaultStyle);
+                        }
+                        continue;
+                    }
+                    if (!jsonJsonObject.has(key) || !entry.getValue().equals(jsonJsonObject.get(key))) {
+                        // 差异项高亮，并合并到 mergedJson
                         String line = "  \"" + key + "\": " + entry.getValue() + ",\n";
                         doc.insertString(doc.getLength(), line, diffStyle);
+                        mergedJson.add(key, entry.getValue());
                     } else {
                         String line = "  \"" + key + "\": " + jsonJsonObject.get(key) + ",\n";
                         doc.insertString(doc.getLength(), line, defaultStyle);
                     }
                 }
-                doc.remove(doc.getLength()-2,1);
+                // 处理 jsonJsonObject 中有但 tempJsonObject 没有的 key
+                for (Map.Entry<String, JsonElement> entry : jsonJsonObject.entrySet()) {
+                    String key = entry.getKey();
+                    if (!tempJsonObject.has(key)) {
+                        String line = "  \"" + key + "\": " + entry.getValue() + ",\n";
+                        doc.insertString(doc.getLength(), line, defaultStyle);
+                    }
+                }
+                // 去掉最后一个逗号
+                if (doc.getLength() > 2) {
+                    doc.remove(doc.getLength()-2,1);
+                }
                 doc.insertString(0, "{\n", defaultStyle);
                 doc.insertString(doc.getLength(), "}", defaultStyle);
             } else {
